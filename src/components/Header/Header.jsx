@@ -1,5 +1,5 @@
 import './Header.scss';
-export function Header() {
+export default function Header() {
     return (
         <header>
             <h1>Game of life</h1>
