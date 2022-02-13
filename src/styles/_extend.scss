@@ -1,0 +1,6 @@
+@import './variable';
+
+%applyPrimaryColorBackground {
+    background-color: $primaryColor;
+    color: white;
+}

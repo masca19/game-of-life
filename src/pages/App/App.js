@@ -17,7 +17,6 @@ function App() {
           label="File of generation"
           updateFileCb={updateUploadedFiles}
         />
-        <button type="submit">Create New User</button>
     </main>
   );
 }

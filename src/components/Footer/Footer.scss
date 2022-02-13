@@ -1,0 +1,7 @@
+@import '../../styles/variable', '../../styles/extend';
+
+footer {
+    @extend %applyPrimaryColorBackground;
+    padding: 25px;
+    
+}
