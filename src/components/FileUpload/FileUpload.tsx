@@ -1,29 +1,34 @@
-import React, { useRef } from "react";
+import React, { useRef, DragEvent, RefObject } from "react";
 
 
 const FileUpload = ({
   label,
   updateFileCb,
   accept
-}) => {
-  const fileInputField = useRef(null);
+}: { label: string, updateFileCb: any, accept: string}) => {
+  const fileInputField = useRef<HTMLInputElement>(null);
 
   const handleUploadBtnClick = () => {
-    fileInputField.current.click();
+    fileInputField?.current?.click();
   };
+ 
+  const handlerDropFile = (files: DragEvent<HTMLDivElement>) => {
+    console.log(files)
+    
+  }
 
-  const handleNewFileUpload = (e) => {
-    console.log(e)
-    updateFileCb(e.target.files);
+  const handleNewFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(e);
+    
   };
 
   return (
-      <div>
+      <div onDrop={handlerDropFile}>
         <label>{label}</label>
         <p>Drag and drop your files anywhere or</p>
         <button type="button" onClick={handleUploadBtnClick}>
           <i className="fas fa-file-upload" />
-          <span> Upload a file</span>
+          <span>Upload generation</span>
         </button>
         <input
           type="file"
@@ -31,7 +36,7 @@ const FileUpload = ({
           onChange={handleNewFileUpload}
           title=""
           value=""
-          accept
+          accept={accept}
         />
       </div>
   );

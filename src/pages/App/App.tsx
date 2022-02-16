@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import FileUpload from '../../components/FileUpload/FileUpload'
+import FileUpload from './../../components/FileUpload/FileUpload'
 import './App.scss';
 
 function App() {
@@ -7,7 +7,7 @@ function App() {
     profileImages: []
   });
 
-  const updateUploadedFiles = (files) =>
+  const updateUploadedFiles = (files: any) =>
     setNewUserInfo({ ...newUserInfo, profileImages: files });
 
   return (
