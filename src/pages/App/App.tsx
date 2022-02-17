@@ -7,8 +7,8 @@ function App() {
     profileImages: []
   });
 
-  const updateUploadedFiles = (files: any) =>
-    setNewUserInfo({ ...newUserInfo, profileImages: files });
+  const updateUploadedFiles = (contentFile: string | ArrayBuffer | null) => console.log(contentFile);
+    
 
   return (
     <main>
