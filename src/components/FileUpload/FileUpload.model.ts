@@ -1,5 +1,5 @@
 export interface InputProps {
     label: string, 
-    updateFileCb: (contentFile: string | ArrayBuffer | null) => void, 
+    updateFileCb: (contentFile: string ) => void, 
     accept: string
 }

@@ -11,13 +11,13 @@ const FileUpload = ({
   const fileInputField = useRef<HTMLInputElement>(null);
 
   const handleUploadBtnClick = () => {
-    fileInputField?.current?.click();
+    fileInputField.current?.click();
   };
 
   let fileReader: FileReader;
   
   const handleFileRead = () => {
-    updateFileCb(fileReader.result)
+    updateFileCb(fileReader.result as string)
   };
   
 
@@ -41,7 +41,6 @@ const FileUpload = ({
         type="file"
         ref={fileInputField}
         onChange={handleNewFileUpload}
-        value=""
         accept={accept}
       />
     </section>
