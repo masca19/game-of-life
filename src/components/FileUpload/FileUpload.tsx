@@ -1,4 +1,4 @@
-import React, { useRef, DragEvent } from "react";
+import React, { useRef } from "react";
 import { InputProps } from './FileUpload.model'
 import './FileUpload.scss';
 
@@ -6,15 +6,23 @@ import './FileUpload.scss';
 const FileUpload = ({
   label,
   updateFileCb,
-  accept
+  accept,
+  isInError
 }: InputProps) => {
   const fileInputField = useRef<HTMLInputElement>(null);
+  let fileReader: FileReader;
+
+  const FileUploadRespose = () => {
+    const messagge = "The content of the file does not respect the rules for a correct reading, correct the file and try again"
+    return (
+      <span className="error">{messagge}</span>
+    )
+  }  
 
   const handleUploadBtnClick = () => {
     fileInputField.current?.click();
   };
 
-  let fileReader: FileReader;
   
   const handleFileRead = () => {
     updateFileCb(fileReader.result as string)
@@ -43,6 +51,7 @@ const FileUpload = ({
         onChange={handleNewFileUpload}
         accept={accept}
       />
+      {isInError && <FileUploadRespose />}
     </section>
   );
 };

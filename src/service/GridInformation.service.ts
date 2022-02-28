@@ -1,6 +1,6 @@
 import { GridInformation, ValueOfGrid } from "../model/GridInformation.model";
 
-export const getInformationForGame = (fileContent: string): GridInformation => {
+export const getInformationForGame = (fileContent: string): GridInformation | null => {
     fileContent = fileContent.replace('\r\n', '\n');
     const contentSplitted: string[] = fileContent.split('\n');
     const generationInfoStr: string = contentSplitted[0];
@@ -9,7 +9,7 @@ export const getInformationForGame = (fileContent: string): GridInformation => {
     const isValidContent = validationOfGenerationInfo(generationInfoStr) 
         && validationOfStructureInfo(structureInfoStr, contentSplitted) 
         && validationOfGrid(contentSplitted)
-    if(!isValidContent) return;
+    if(!isValidContent) return null;
 
     return {
         generation: getGeneration(generationInfoStr),
@@ -32,7 +32,7 @@ const validationOfStructureInfo = (content:string, gridAsString: string[]): bool
     const column = gridAsString[0].length;
     const row = gridAsString.length;
     const contentSplitted = content.split(' ')
-    return +contentSplitted[0] === column && +contentSplitted[1] === row
+    return +contentSplitted[0] === row && +contentSplitted[1] === column
 }
 
 const validationOfGrid = (gridAsString: string[]): boolean => {
@@ -40,7 +40,7 @@ const validationOfGrid = (gridAsString: string[]): boolean => {
     return gridAsString.reduce((previus: boolean, currrent: string) => previus && regex.test(currrent), true);
 }
 
-const getGeneration = (content): number => {
+const getGeneration = (content: string): number => {
     return +content.split(' ')[1];
 }
 
