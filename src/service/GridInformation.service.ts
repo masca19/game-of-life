@@ -1,4 +1,4 @@
-import { GridInformation, ValueOfGrid } from "../model/GridInformation.model";
+import { CellCoordinate, GetGridOutput, GridInformation, ValueOfGrid } from "../model/GridInformation.model";
 
 export const getInformationForGame = (fileContent: string): GridInformation | null => {
     fileContent = fileContent.replace('\r\n', '\n');
@@ -10,12 +10,13 @@ export const getInformationForGame = (fileContent: string): GridInformation | nu
         && validationOfStructureInfo(structureInfoStr, contentSplitted) 
         && validationOfGrid(contentSplitted)
     if(!isValidContent) return null;
-
+    const {grid, aliveCells} = getGrid(contentSplitted);
     return {
         generation: getGeneration(generationInfoStr),
         column: contentSplitted[0].length,
         row: contentSplitted.length,
-        grid: getGrid(contentSplitted)
+        grid: grid,
+        aliveCells: aliveCells
     }
 }
 
@@ -44,9 +45,23 @@ const getGeneration = (content: string): number => {
     return +content.split(' ')[1];
 }
 
-const getGrid = (content: string[]): boolean[][] => {
-    return content.map(row => {
+const getGrid = (content: string[]): GetGridOutput => {
+    const aliveCells: CellCoordinate[] = []
+    const grid = content.map((row, rowIndex) => {
         const rowSplitted = row.split('');
-        return rowSplitted.map( _ => ValueOfGrid.alive === _)
+        return rowSplitted.map( (cell, columnIndex) => {
+            const isAliveCell = ValueOfGrid.alive === cell;
+            if(isAliveCell) {
+                aliveCells.push({
+                    row: rowIndex,
+                    column: columnIndex
+                })
+            }
+            return isAliveCell;
+        })
     });
+    return {
+        grid: grid,
+        aliveCells: aliveCells
+    }
 }

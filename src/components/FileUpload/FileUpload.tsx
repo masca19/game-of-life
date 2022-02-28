@@ -4,6 +4,7 @@ import './FileUpload.scss';
 
 
 const FileUpload = ({
+  title,
   label,
   updateFileCb,
   accept,
@@ -39,10 +40,11 @@ const FileUpload = ({
 
   return (
     <section>
-      <h2>{label}</h2>
+      <h2>{title}</h2>
+      <p>{label}</p>
       <button onClick={handleUploadBtnClick}>
         <div>
-          <span>Choose File</span>
+          <span>File</span>
         </div>
       </button>
       <input

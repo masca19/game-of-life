@@ -1,0 +1,29 @@
+@import '../../styles/variable';
+.gameOfLife {
+    background-color: #E1E1E1;
+    margin-top: 30px;
+    padding: 20px;
+    border-radius: 25px;
+
+    .gridContainer {
+        overflow: auto;
+        width: 80%;
+        border: 1px solid black;
+
+        .row {
+            display: flex;
+        }
+        
+        span {
+            width: 30px;
+            height: 30px;
+            flex-grow: 1;
+            border: 1px solid black;
+
+            &.alive {
+                background-color: $primaryColor;
+            }
+        }
+    }
+    
+}
