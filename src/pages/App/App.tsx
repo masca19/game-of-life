@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import FileUpload from './../../components/FileUpload/FileUpload';
 import GameOfLife from '../../components/GameOfLife/GameOfLife';
-import { getInformationForGame } from '../../service/GridInformation.service';
+import { getGridInformation } from '../../service/GridInformation.service';
 import { getNextGenerationGrid } from '../../service/NextGeneration.service';
 import { GridInformation } from "../../model/GridInformation.model";
 import './App.scss';
@@ -16,7 +16,7 @@ export default function App() {
   }, [gridCurrentGeneration])
   
   const updateUploadedFiles = (contentFile: string) => {
-    setGridCurrentGeneration(getInformationForGame(contentFile))
+    setGridCurrentGeneration(getGridInformation(contentFile))
   }
 
   const cleanAll = () => {

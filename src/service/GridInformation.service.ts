@@ -1,14 +1,15 @@
-import { CellCoordinate, GetGridOutput, GrdiInformationAsString, GridInformation, ValueOfGrid } from "../model/GridInformation.model";
+import { CellCoordinate, GetGridOutput, GridInformationAsString, GridInformation, ValueOfGrid } from "../model/GridInformation.model";
 
-let gridInformationAsStirng: GrdiInformationAsString;
+let gridInformationAsStirng: GridInformationAsString;
 
-export const getInformationForGame = (fileContent: string): GridInformation => {
+//Collecting the content from the file and parsing the information
+export const getGridInformation = (fileContent: string): GridInformation => {
     if(!gridInformationAsStirng){
-        gridInformationAsStirng = getGridInformationAsStirng(fileContent);
+        gridInformationAsStirng = getGridInformationAsString(fileContent);
     }
-    const {grid, aliveCells} = getGrid(gridInformationAsStirng.gridAsString);
+    const {grid, aliveCells} = getGridAndAliveCellsFromString(gridInformationAsStirng.gridAsString);
     return {
-        generation: getGeneration(gridInformationAsStirng.generationInfoStr),
+        generation: getGenerationFromString(gridInformationAsStirng.generationInfoStr),
         column: gridInformationAsStirng.gridAsString[0].length,
         row: gridInformationAsStirng.gridAsString.length,
         grid: grid,
@@ -16,14 +17,15 @@ export const getInformationForGame = (fileContent: string): GridInformation => {
     }
 }
 
+
 export const isValidContent = (fileContent: string): boolean => {
-    gridInformationAsStirng = getGridInformationAsStirng(fileContent);
+    gridInformationAsStirng = getGridInformationAsString(fileContent);
     return validationOfGenerationInfo(gridInformationAsStirng.generationInfoStr) 
     && validationOfStructureInfo(gridInformationAsStirng.structureInfoStr, gridInformationAsStirng.gridAsString) 
     && validationOfGrid(gridInformationAsStirng.gridAsString);
 }
 
-const getGridInformationAsStirng = (fileContent: string): GrdiInformationAsString => {
+const getGridInformationAsString = (fileContent: string): GridInformationAsString => {
     fileContent = fileContent.replace('\r\n', '\n');
     const contentSplitted: string[] = fileContent.split('\n');
     const generationInfoStr: string = contentSplitted[0];
@@ -57,11 +59,11 @@ const validationOfGrid = (gridAsString: string[]): boolean => {
     return gridAsString.reduce((previus: boolean, currrent: string) => previus && regex.test(currrent), true);
 }
 
-const getGeneration = (content: string): number => {
+const getGenerationFromString = (content: string): number => {
     return +content.split(' ')[1];
 }
 
-const getGrid = (content: string[]): GetGridOutput => {
+const getGridAndAliveCellsFromString = (content: string[]): GetGridOutput => {
     const aliveCells: CellCoordinate[] = []
     const grid = content.map((row, rowIndex) => {
         const rowSplitted = row.split('');

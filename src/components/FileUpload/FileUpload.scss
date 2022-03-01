@@ -10,10 +10,14 @@
     z-index: 1;
 }
 
-section {
+%alignCenterCenter {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+section {
+    @extend %alignCenterCenter;
     flex-direction: column;
     text-align: center;
 }
@@ -30,9 +34,7 @@ input[type="file"] {
 }
 
 button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    @extend %alignCenterCenter;
     width: 250px;
     height: 70px;
     padding: 0;
@@ -41,10 +43,8 @@ button {
     border: none;
 
     > div {
+        @extend %alignCenterCenter;
         position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
         width: 250px;
         height: 100%;
         color: #fff;
