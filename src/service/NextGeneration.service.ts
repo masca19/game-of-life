@@ -14,9 +14,9 @@ const generalIndexToTurnAround = [
 export const getNextGenerationGrid = (currentGridInformation: GridInformation): GridInformation => {
     let newCellsDeadNearAliveCell = new Set<CellCoordinate>();
     const aliveCells: CellCoordinate[] = []
-    const newGrid = [...currentGridInformation.grid];
+    const newGrid = currentGridInformation.grid.map(row  => row.map( item => item));
     currentGridInformation.aliveCells.forEach(cell => {
-        const { isAliveCell, cellsDeadNearAliveCell } = nextGenerationForAliveCell(newGrid, cell, currentGridInformation.column, currentGridInformation.row);
+        const { isAliveCell, cellsDeadNearAliveCell } = nextGenerationForAliveCell(currentGridInformation.grid, cell, currentGridInformation.column, currentGridInformation.row);
         newGrid[cell.row][cell.column] = isAliveCell;
         newCellsDeadNearAliveCell = new Set([...newCellsDeadNearAliveCell, ...cellsDeadNearAliveCell])
         if(isAliveCell) {
@@ -28,7 +28,7 @@ export const getNextGenerationGrid = (currentGridInformation: GridInformation): 
     });
 
     newCellsDeadNearAliveCell.forEach(cellDead => {
-        newGrid[cellDead.row][cellDead.column] = nextGenerationForDeadCell(newGrid, cellDead, currentGridInformation.column, currentGridInformation.row);
+        newGrid[cellDead.row][cellDead.column] = nextGenerationForDeadCell(currentGridInformation.grid, cellDead, currentGridInformation.column, currentGridInformation.row);
         if (newGrid[cellDead.row][cellDead.column]){
             aliveCells.push({
                 row: cellDead.row,
@@ -54,12 +54,9 @@ const nextGenerationForAliveCell = (grid: boolean[][], cell: CellCoordinate, max
         const row = cell.row + item.row;
         const column = cell.column + item.column;
         if(isRowAndColumnInsideTheGrid(row, column, maxColumn, maxRow)){
-            if (grid[row][column]) {
-                nearAliveCell++;
-            }
-            else {
-                cellsDeadNearAliveCell.push({ row: row, column: column })
-            }
+            grid[row][column]
+                ? nearAliveCell++
+                : cellsDeadNearAliveCell.push({ row: row, column: column });
         }
     })
     const isAliveCell: boolean = nearAliveCell === 2 || nearAliveCell === 3

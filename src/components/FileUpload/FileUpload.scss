@@ -1,4 +1,4 @@
-@import '../../styles/variable';
+@import "../../styles/variable";
 
 %btnAfterBefore {
     content: "";
@@ -27,7 +27,7 @@ input[type="file"] {
     color: red;
     text-align: center;
     font-size: 16px;
-  }
+}
 
 button {
     display: flex;
@@ -36,10 +36,11 @@ button {
     width: 250px;
     height: 70px;
     padding: 0;
+    margin-top: 20px;
     background-color: $primaryColor;
     border: none;
 
-    >div {
+    > div {
         position: relative;
         display: flex;
         align-items: center;
@@ -55,7 +56,7 @@ button {
             background-color: rgba(255, 255, 255, 0.3);
             transition: all 0.3s;
         }
-        
+
         &::after {
             @extend %btnAfterBefore;
             opacity: 0;

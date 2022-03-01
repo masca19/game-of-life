@@ -7,17 +7,21 @@ import { GridInformation } from "../../model/GridInformation.model";
 import './App.scss';
 
 export default function App() {
-  const [gridCurrentGeneration, setGridCurrentGeneration] = useState<GridInformation | null>();
+  const labelFirtSection = "To calculate the next generation load the file with the current generation. Please follow the specific file structure"
+  const [gridCurrentGeneration, setGridCurrentGeneration] = useState<GridInformation>();
+  const [gridNextGeneration, setGridNextGeneration] = useState<GridInformation>();
+  
   useEffect(() => {
-    setIsErrorFile(!gridCurrentGeneration)
-    !!gridCurrentGeneration && setGridNextGeneration(getNextGenerationGrid(gridCurrentGeneration))
+    gridCurrentGeneration && setGridNextGeneration(getNextGenerationGrid(gridCurrentGeneration))
   }, [gridCurrentGeneration])
-  const [gridNextGeneration, setGridNextGeneration] = useState<GridInformation | null>();
-  const [isErrorFile, setIsErrorFile] = useState<boolean>(false);
-  const labelFirtSection = "To calculate the next generation load the file with the current generation, I recommend respecting the structure"
   
   const updateUploadedFiles = (contentFile: string) => {
     setGridCurrentGeneration(getInformationForGame(contentFile))
+  }
+
+  const cleanAll = () => {
+    setGridCurrentGeneration(undefined);
+    setGridNextGeneration(undefined);
   }
 
 
@@ -28,7 +32,7 @@ export default function App() {
         title="Choose file"
         label={labelFirtSection}
         updateFileCb={updateUploadedFiles}
-        isInError={isErrorFile}
+        cleanAll={cleanAll}
       />
       {
         gridCurrentGeneration

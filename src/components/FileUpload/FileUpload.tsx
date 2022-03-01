@@ -1,4 +1,5 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
+import { isValidContent } from "../../service/GridInformation.service";
 import { InputProps } from './FileUpload.model'
 import './FileUpload.scss';
 
@@ -6,30 +7,36 @@ import './FileUpload.scss';
 const FileUpload = ({
   title,
   label,
-  updateFileCb,
   accept,
-  isInError
+  updateFileCb,
+  cleanAll
 }: InputProps) => {
   const fileInputField = useRef<HTMLInputElement>(null);
   let fileReader: FileReader;
+  const [isErrorFile, setIsErrorFile] = useState<boolean>(false);
 
   const FileUploadRespose = () => {
-    const messagge = "The content of the file does not respect the rules for a correct reading, correct the file and try again"
+    const messagge = "The content of the file does not respect the rules for a correct reading, correct the file and try again";
     return (
       <span className="error">{messagge}</span>
-    )
+    );
   }  
 
   const handleUploadBtnClick = () => {
     fileInputField.current?.click();
   };
 
-  
   const handleFileRead = () => {
-    updateFileCb(fileReader.result as string)
+    if(isValidContent(fileReader.result as string)){
+      setIsErrorFile(false);
+      updateFileCb(fileReader.result as string);
+    }
+    else {
+      setIsErrorFile(true)
+      cleanAll()
+    }
   };
   
-
   const handleNewFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files?.length) return 
     const file: Blob = e.target.files[0];
@@ -53,7 +60,7 @@ const FileUpload = ({
         onChange={handleNewFileUpload}
         accept={accept}
       />
-      {isInError && <FileUploadRespose />}
+      {isErrorFile && <FileUploadRespose />}
     </section>
   );
 };

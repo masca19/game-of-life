@@ -10,6 +10,12 @@ export interface GridInformation {
     aliveCells: CellCoordinate[];
 }
 
+export interface GrdiInformationAsString {
+    generationInfoStr: string,
+    structureInfoStr: string,
+    gridAsString: string[]
+}
+
 export interface CellCoordinate {
     column: number;
     row: number;

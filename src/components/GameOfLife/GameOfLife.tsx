@@ -25,16 +25,13 @@ const GameOfLife = ({
     grid
 }:InputProps) => {
     return (
-        <section className="gameOfLife">
-            <h2>{title}</h2>
-            <h3>Generation {generation}</h3>
-            <p>
-                <span>Row: {row}</span>
-                <span>Column: {column}</span>
-            </p>
-            <Grid grid={grid} />
-
-        </section>
+        <div className="gameOfLifeContainer">
+            <div className="gameOfLifeCard">
+                <h2>{title} {generation}°</h2>
+                <span>{row} x {column}</span>
+                <Grid grid={grid} />
+            </div>
+        </div>
     ) 
 }
 

@@ -1,29 +1,43 @@
-@import '../../styles/variable';
-.gameOfLife {
-    background-color: #E1E1E1;
-    margin-top: 30px;
-    padding: 20px;
-    border-radius: 25px;
+@import "../../styles/variable";
 
-    .gridContainer {
-        overflow: auto;
-        width: 80%;
-        border: 1px solid black;
+.gameOfLifeContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 
-        .row {
-            display: flex;
-        }
+    .gameOfLifeCard {
+        max-width: calc(100vw - 80px);
+        margin-top: 30px;
+        padding: 20px;
+        border-radius: 25px;
+        background-color: $cardBackground;
+        text-align: center;
         
-        span {
-            width: 30px;
-            height: 30px;
-            flex-grow: 1;
-            border: 1px solid black;
+        h2 {
+            margin: 0;
+        }
 
-            &.alive {
-                background-color: $primaryColor;
+        > span {
+            font-weight: bold;
+            margin: 20px 0;
+        }
+    
+        .gridContainer {
+            border: 1px solid black;
+    
+            .row {
+                display: flex;
+            }
+    
+            span {
+                width: 30px;
+                height: 30px;
+                border: 1px solid black;
+    
+                &.alive {
+                    background-color: $primaryColor;
+                }
             }
         }
     }
-    
 }

@@ -1,22 +1,38 @@
-import { CellCoordinate, GetGridOutput, GridInformation, ValueOfGrid } from "../model/GridInformation.model";
+import { CellCoordinate, GetGridOutput, GrdiInformationAsString, GridInformation, ValueOfGrid } from "../model/GridInformation.model";
 
-export const getInformationForGame = (fileContent: string): GridInformation | null => {
+let gridInformationAsStirng: GrdiInformationAsString;
+
+export const getInformationForGame = (fileContent: string): GridInformation => {
+    if(!gridInformationAsStirng){
+        gridInformationAsStirng = getGridInformationAsStirng(fileContent);
+    }
+    const {grid, aliveCells} = getGrid(gridInformationAsStirng.gridAsString);
+    return {
+        generation: getGeneration(gridInformationAsStirng.generationInfoStr),
+        column: gridInformationAsStirng.gridAsString[0].length,
+        row: gridInformationAsStirng.gridAsString.length,
+        grid: grid,
+        aliveCells: aliveCells
+    }
+}
+
+export const isValidContent = (fileContent: string): boolean => {
+    gridInformationAsStirng = getGridInformationAsStirng(fileContent);
+    return validationOfGenerationInfo(gridInformationAsStirng.generationInfoStr) 
+    && validationOfStructureInfo(gridInformationAsStirng.structureInfoStr, gridInformationAsStirng.gridAsString) 
+    && validationOfGrid(gridInformationAsStirng.gridAsString);
+}
+
+const getGridInformationAsStirng = (fileContent: string): GrdiInformationAsString => {
     fileContent = fileContent.replace('\r\n', '\n');
     const contentSplitted: string[] = fileContent.split('\n');
     const generationInfoStr: string = contentSplitted[0];
     const structureInfoStr: string = contentSplitted[1];
     contentSplitted.splice(0, 2);
-    const isValidContent = validationOfGenerationInfo(generationInfoStr) 
-        && validationOfStructureInfo(structureInfoStr, contentSplitted) 
-        && validationOfGrid(contentSplitted)
-    if(!isValidContent) return null;
-    const {grid, aliveCells} = getGrid(contentSplitted);
     return {
-        generation: getGeneration(generationInfoStr),
-        column: contentSplitted[0].length,
-        row: contentSplitted.length,
-        grid: grid,
-        aliveCells: aliveCells
+        generationInfoStr: generationInfoStr,
+        structureInfoStr: structureInfoStr,
+        gridAsString: contentSplitted
     }
 }
 
