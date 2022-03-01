@@ -1,6 +1,6 @@
-import { CellCoordinate, GridInformation } from "../model/GridInformation.model";
+import { CellCoordinate, GridInformation, InformationForCalculateNextGeneration, ResultNextGenerationToAliveCell } from "../model/GridInformation.model";
 
-const generalIndexToTurnAround = [
+const generalIndexToTurnAround: CellCoordinate[] = [
     { row: -1, column: -1, },
     { row: -1, column: 0, },
     { row: -1, column: 1, },
@@ -12,30 +12,9 @@ const generalIndexToTurnAround = [
 ]
 
 export const getNextGenerationGrid = (currentGridInformation: GridInformation): GridInformation => {
-    let newCellsDeadNearAliveCell = new Set<CellCoordinate>();
-    const aliveCells: CellCoordinate[] = []
     const newGrid = currentGridInformation.grid.map(row  => row.map( item => item));
-    currentGridInformation.aliveCells.forEach(cell => {
-        const { isAliveCell, cellsDeadNearAliveCell } = nextGenerationForAliveCell(currentGridInformation.grid, cell, currentGridInformation.column, currentGridInformation.row);
-        newGrid[cell.row][cell.column] = isAliveCell;
-        newCellsDeadNearAliveCell = new Set([...newCellsDeadNearAliveCell, ...cellsDeadNearAliveCell])
-        if(isAliveCell) {
-            aliveCells.push({
-                row: cell.row,
-                column: cell.column
-            })
-        }
-    });
-
-    newCellsDeadNearAliveCell.forEach(cellDead => {
-        newGrid[cellDead.row][cellDead.column] = nextGenerationForDeadCell(currentGridInformation.grid, cellDead, currentGridInformation.column, currentGridInformation.row);
-        if (newGrid[cellDead.row][cellDead.column]){
-            aliveCells.push({
-                row: cellDead.row,
-                column: cellDead.column
-            })
-        }
-    });
+    let {aliveCells, newCellsDeadNearAliveCell}  = generateNextGenerationToAliveCell(currentGridInformation, newGrid);
+    aliveCells = generateNextGenerationToDeadCell(currentGridInformation, newGrid, aliveCells, newCellsDeadNearAliveCell);
 
     return {
         generation: currentGridInformation.generation + 1,
@@ -46,8 +25,49 @@ export const getNextGenerationGrid = (currentGridInformation: GridInformation): 
     }
 }
 
+const generateNextGenerationToAliveCell = (
+    currentGridInformation: GridInformation, 
+    newGrid: boolean[][]): ResultNextGenerationToAliveCell => 
+{
+    let newCellsDeadNearAliveCell = new Set<CellCoordinate>();
+    const aliveCells: CellCoordinate[] = [];
+    currentGridInformation.aliveCells.forEach(cell => {
+        const { isAliveCell, cellsDeadNearAliveCell } = nextGenerationForAliveCell(currentGridInformation.grid, cell, currentGridInformation.column, currentGridInformation.row);
+        newGrid[cell.row][cell.column] = isAliveCell;
+        newCellsDeadNearAliveCell = new Set([...newCellsDeadNearAliveCell, ...cellsDeadNearAliveCell]);
+        if(isAliveCell) {
+            aliveCells.push(CellCoordinate.createIstance(cell.row, cell.column));
+        }
+    });
 
-const nextGenerationForAliveCell = (grid: boolean[][], cell: CellCoordinate, maxColumn: number, maxRow: number) => {
+    return {
+        aliveCells: aliveCells,
+        newCellsDeadNearAliveCell: newCellsDeadNearAliveCell
+    };
+}
+
+const generateNextGenerationToDeadCell = (
+    currentGridInformation: GridInformation, 
+    newGrid: boolean[][], 
+    aliveCells: CellCoordinate[], 
+    newCellsDeadNearAliveCell: Set<CellCoordinate>): CellCoordinate[]  => 
+{
+    newCellsDeadNearAliveCell.forEach(cellDead => {
+        newGrid[cellDead.row][cellDead.column] = nextGenerationForDeadCell(currentGridInformation.grid, cellDead, currentGridInformation.column, currentGridInformation.row);
+        if (newGrid[cellDead.row][cellDead.column]){
+            aliveCells.push(CellCoordinate.createIstance(cellDead.row, cellDead.column));
+        }
+    });
+    return aliveCells
+}
+
+
+const nextGenerationForAliveCell = (
+    grid: boolean[][], 
+    cell: CellCoordinate, 
+    maxColumn: number, 
+    maxRow: number): InformationForCalculateNextGeneration =>
+{
     const cellsDeadNearAliveCell: CellCoordinate[] = [];
     let nearAliveCell = 0;
     generalIndexToTurnAround.forEach(item => {
@@ -56,17 +76,22 @@ const nextGenerationForAliveCell = (grid: boolean[][], cell: CellCoordinate, max
         if(isRowAndColumnInsideTheGrid(row, column, maxColumn, maxRow)){
             grid[row][column]
                 ? nearAliveCell++
-                : cellsDeadNearAliveCell.push({ row: row, column: column });
+                : cellsDeadNearAliveCell.push(CellCoordinate.createIstance(row, column));
         }
     })
-    const isAliveCell: boolean = nearAliveCell === 2 || nearAliveCell === 3
+    const isAliveCell: boolean = nearAliveCell === 2 || nearAliveCell === 3;
     return {
         isAliveCell: isAliveCell,
         cellsDeadNearAliveCell: cellsDeadNearAliveCell,
     };
 }
 
-const nextGenerationForDeadCell = (grid: boolean[][], cell: CellCoordinate, maxColumn: number, maxRow: number) => {
+const nextGenerationForDeadCell = (
+    grid: boolean[][], 
+    cell: CellCoordinate, 
+    maxColumn: number, 
+    maxRow: number): boolean => 
+{
     let nearAliveCell = 0;
     generalIndexToTurnAround.forEach(item => {
         const row = cell.row + item.row;

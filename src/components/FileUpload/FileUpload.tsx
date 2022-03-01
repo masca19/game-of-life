@@ -11,9 +11,9 @@ const FileUpload = ({
   updateFileCb,
   cleanAll
 }: InputProps) => {
+  const [isErrorFile, setIsErrorFile] = useState<boolean>(false);
   const fileInputField = useRef<HTMLInputElement>(null);
   let fileReader: FileReader;
-  const [isErrorFile, setIsErrorFile] = useState<boolean>(false);
 
   const FileUploadRespose = () => {
     const messagge = "The content of the file does not respect the rules for a correct reading, correct the file and try again";
